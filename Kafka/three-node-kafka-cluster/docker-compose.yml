@@ -1,0 +1,77 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - kafka_network
+    ports:
+      - 2181:2181
+
+  kafka_1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-1
+    networks:
+      - kafka_network
+    depends_on:
+      - zookeeper
+    ports:
+      - 19092:19092
+      - 19093:19093
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL_SAME_HOST://:19092,EXTERNAL_DIFFERENT_HOST://:19093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:9092,EXTERNAL_SAME_HOST://localhost:19092,EXTERNAL_DIFFERENT_HOST://173.17.0.1:19093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+
+
+  kafka_2:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-2
+    networks:
+      - kafka_network
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+      - 29093:29093
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://:9093,EXTERNAL_SAME_HOST://:29092,EXTERNAL_DIFFERENT_HOST://:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:9093,EXTERNAL_SAME_HOST://localhost:29092,EXTERNAL_DIFFERENT_HOST://173.17.0.1:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+
+
+  kafka_3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-3
+    networks:
+      - kafka_network
+    depends_on:
+      - zookeeper
+    ports:
+      - 39092:39092
+      - 39093:39093
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://:9094,EXTERNAL_SAME_HOST://:39092,EXTERNAL_DIFFERENT_HOST://:39093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:9094,EXTERNAL_SAME_HOST://localhost:39092,EXTERNAL_DIFFERENT_HOST://173.17.0.1:39093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+networks:
+  kafka_network:
+    name: kafka_net
