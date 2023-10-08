@@ -1,0 +1,38 @@
+{
+  "name" : "pre-covid",
+  "description" : "",
+  "role" : "arn:aws:iam::814408971873:role/Glue_ETL_S3",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://aws-glue-assets-814408971873-us-east-1/scripts/pre-covid.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://aws-glue-assets-814408971873-us-east-1/sparkHistoryLogs/",
+    "--enable-job-insights" : "true",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-814408971873-us-east-1/temporary/"
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 5,
+  "timeout" : 30,
+  "maxCapacity" : 5.0,
+  "glueVersion" : "3.0",
+  "numberOfWorkers" : 5,
+  "workerType" : "G.1X",
+  "executionClass" : "STANDARD",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "pedrom-teixeira.github.io",
+    "branch" : "develop",
+    "folder" : "GlueScripts"
+  }
+}
